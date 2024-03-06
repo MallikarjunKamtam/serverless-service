@@ -1,10 +1,15 @@
 const serverless = require("serverless-http");
 const express = require("express");
 const app = express();
+const clients = require("./db/clients");
 
-app.get("/", (req, res, next) => {
+app.get("/", async (req, res, next) => {
+  const db = await clients.getDbClient();
+  const results = await db`select now();`;
+
   return res.status(200).json({
     message: "Hello from root!",
+    results: results,
   });
 });
 
